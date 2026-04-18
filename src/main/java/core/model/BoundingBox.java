@@ -37,4 +37,29 @@ public class BoundingBox {
                 p.getLatitude() >= (centerY - halfHeight) && //-- point is not too far down
                 p.getLatitude() <= (centerY + halfHeight); //--- point is not too far up
     }
+
+    /**
+     * Determines whether this bounding box intersects/overlaps with the specified bounding box.
+     *
+     * @param range the other bounding box to check for intersection
+     * @return {@code true} if the bounding boxes intersect; {@code false} otherwise
+     */
+    public boolean intersects(BoundingBox range) {
+        double thisLeft = this.centerX - this.halfWidth;
+        double thisRight = this.centerX + this.halfWidth;
+        double thisTop = this.centerY + this.halfHeight;
+        double thisBottom = this.centerY - this.halfHeight;
+
+        double rangeLeft = range.centerX - range.halfWidth;
+        double rangeRight = range.centerX + range.halfWidth;
+        double rangeTop = range.centerY + range.halfHeight;
+        double rangeBottom = range.centerY - range.halfHeight;
+
+
+        return !(rangeLeft > thisRight ||
+                rangeRight < thisLeft ||
+                rangeTop < thisBottom ||
+                rangeBottom > thisTop
+        );
+    }
 }
