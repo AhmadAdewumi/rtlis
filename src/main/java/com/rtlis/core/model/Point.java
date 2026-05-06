@@ -1,4 +1,4 @@
-package core.model;
+package com.rtlis.core.model;
 
 public class Point {
     private final double longitude;

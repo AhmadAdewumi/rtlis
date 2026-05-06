@@ -1,7 +1,7 @@
-package core.spatial;
+package com.rtlis.core.spatial;
 
-import core.model.BoundingBox;
-import core.model.Point;
+import com.rtlis.core.model.BoundingBox;
+import com.rtlis.core.model.Point;
 
 import java.util.List;
 

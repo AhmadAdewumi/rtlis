@@ -1,6 +1,6 @@
-package core.temporal;
+package com.rtlis.core.temporal;
 
-import core.model.Point;
+import com.rtlis.core.model.Point;
 
 /**
  * Represents a min-heap structure specifically designed to manage and process events
