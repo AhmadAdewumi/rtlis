@@ -94,7 +94,7 @@ public class SkipList {
         //-- init our traversal from the head
         SkipListNode current = this.head;
 
-        //-- we go downwards (high to low level)
+        //-- we go downwards (high to low level), searching from top to down
         for (int level = currentLevel; level >= 0; level--) {
             //-- we move right as long as - the next node exists and - the next node's timestamp is less than the new point's timestamp
             while (current.getForward(level) != null && current.getForward(level).getPoint().getTimestamp() < point.getTimestamp()) {
@@ -120,7 +120,8 @@ public class SkipList {
                 update[i] = this.head;
             }
 
-            //-- we update the current level tracked by the SkipList
+            //-- we update the current level tracked by the SkipList, important
+            //--... so, we won't waste time searching empty levels
             currentLevel = nodeHeight - 1;
         }
 
@@ -130,10 +131,12 @@ public class SkipList {
         //-- from level 0 to level[nodeHeight-1]
         for (int i = 0; i < nodeHeight; i++) {
             //-- newNode's forward at this current level = whatever update[i] was pointing to
-            newNode.setForward(i, update[i].getForward(i));
+            //-- if it was Head -> null before, we wanna insert 100, say our i starts from 0 to 2
+            newNode.setForward(i, update[i].getForward(i)); //-- at level 0, [100] -> null, same at lvl 1 and 2
 
             //-- update[i]'s forward at this level will now be the new node
-            update[i].setForward(i, newNode);
+            update[i].setForward(i, newNode); //-- at level 0, Head's forward to 100: Head -> [100]
+            //-- then we have Head -> [100] -> null
         }
 
         size++; //-- we increment the size counter
@@ -149,22 +152,25 @@ public class SkipList {
     }
 
     public List<Point> flushAll() {
-        List<Point> flushed = new ArrayList<>(this.size); //--we create a lsit with exact capacity to avoid resizing
+        List<Point> flushed = new ArrayList<>(this.size); //--we create a list with exact capacity to avoid resizing
 
+        //-- level 0 is the base linked list that contains every node in sorted order
         SkipListNode current = this.head.getForward(0);
+
+        //-- just a normal linked list traversal, starting from head
         while (current != null) {
             flushed.add(current.getPoint());
             current = current.getForward(0);
         }
 
-        //--purge all and reset all head forward pointers to null
+        //-- since the flushed list now contain every points, purge all and reset all head forward pointers to null, GC clean up after
         for (int i = 0; i < MAX_LEVEL; i++) {
             this.head.setForward(i, null);
         }
 
         //-- reset te state
         this.size = 0;
-        this.currentLevel=0;
+        this.currentLevel = 0;
 
         //-- we return sorted data for SSTable flush
         return flushed;
