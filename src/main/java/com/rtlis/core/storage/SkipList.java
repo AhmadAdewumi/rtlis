@@ -128,7 +128,7 @@ public class SkipList {
 
         //-- time to splice the new node into every linked list at each level
         //-- from level 0 to level[nodeHeight-1]
-        for (int i = 0; i < nodeHeight - 1; i++) {
+        for (int i = 0; i < nodeHeight; i++) {
             //-- newNode's forward at this current level = whatever update[i] was pointing to
             newNode.setForward(i, update[i].getForward(i));
 
